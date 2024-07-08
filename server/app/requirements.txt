@@ -1,4 +1,4 @@
 Flask
-flask_sqlalchemy
-flask_cors
+Flask-SQLAlchemy
+Flask-Cors
 python-dotenv
