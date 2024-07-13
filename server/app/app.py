@@ -56,14 +56,14 @@ def register():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.get_json()
-    username = data.get('username')
+    email = data.get('email')
     password = data.get('password')
 
-    if not username or not password:
+    if not email or not password:
         return jsonify({'message': 'Username or password is missing!'}), 400
 
-    user = User.query.filter_by(username=username).first()
-    if user is None or check_password_hash(user.password_hash, password):
+    user = User.query.filter_by(email=email).first()
+    if user is None or not check_password_hash(user.password_hash, password):
         return jsonify({'message': 'Invalid credentials!'}), 400
 
     return jsonify({'message': 'Login successful!'})
