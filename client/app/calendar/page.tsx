@@ -68,7 +68,7 @@ const Calendar = () => {
 
     return (
       <div className="flex justify-center">
-        <p className="grid grid-cols-7 gap-1 text-center pt-0">{days}</p>
+        <div className="grid grid-cols-7 gap-1 text-center pt-0">{days}</div>
       </div>
     );
   };
