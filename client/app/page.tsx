@@ -4,7 +4,7 @@ import Calendar from "./calendar/page";
 export default function Home() {
   return (
     <>
-      <div>
+      <div className="calendar-container">
         <Calendar />
       </div>
     </>
