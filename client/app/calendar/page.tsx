@@ -9,12 +9,16 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import MenuIcon from "@mui/icons-material/Menu";
 import CloseIcon from "@mui/icons-material/Close";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Calendar: React.FC = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [view, setView] = useState<string>("month");
   const [menuOpen, setMenuOpen] = useState(false);
   const [friendListOpen, setFriendListOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState<Date | null>(new Date());
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -39,6 +43,19 @@ const Calendar: React.FC = () => {
     };
   }, []);
 
+  const openModal = () => {
+    setIsModalOpen(true);
+    setMenuOpen(false);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleDateChange = (date: Date | null) => {
+    setSelectedDate(date);
+  };
+
   const renderHeader = () => {
     return (
       <div className="flex justify-between items-center w-full h-10 bg-gray-800 px-4">
@@ -54,7 +71,7 @@ const Calendar: React.FC = () => {
           <div className="flex justify-center items-center mx-2 px-2 py-1 border border-gray-500 rounded">
             <button
               onClick={() => setCurrentDate(new Date())}
-              className="text-blue-600 text-xxs font-normal"
+              className=" bg-gray-800 text-blue-600 text-xxs"
             >
               Today
             </button>
@@ -214,7 +231,10 @@ const Calendar: React.FC = () => {
           />
           <div className="font-bold cursor-pointer">CC</div>
         </div>
-        <button className="flex items-center ml-1 p-1 text-xxs bg-gray-700 border rounded-full">
+        <button
+          className="flex items-center ml-1 p-1 text-xxs bg-gray-700 border rounded-full"
+          onClick={openModal}
+        >
           <AddIcon className="icon-extra-small" />
           イベント作成
         </button>
@@ -289,11 +309,87 @@ const Calendar: React.FC = () => {
     );
   };
 
+  const renderModal = () => {
+    return (
+      <div
+        className={`fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ${isModalOpen ? "" : "hidden"}`}
+      >
+        <div className="bg-gray-800 p-6 rounded shadow-lg w-96 relative">
+          <CloseIcon
+            className="absolute top-2 right-2 icon-extra-small cursor-pointer"
+            onClick={closeModal}
+          />
+          <h2 className="text-lg text-center mb-4 font-bold">イベント作成</h2>
+          <form>
+            <div className="mb-2">
+              <label className="block text-xxs font-bold">イベント名</label>
+              <input
+                type="text"
+                className="w-full h-5 p-2 border rounded text-gray-700 text-xs outline-none"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block text-xxs font-bold">日付</label>
+              <DatePicker
+                selected={selectedDate}
+                onChange={handleDateChange}
+                className="w-full h-5 p-2 border rounded text-gray-700 text-xxs outline-none"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block text-xxs font-bold">集合時間</label>
+              <input
+                type="text"
+                className="w-full h-5 p-2 border rounded text-gray-700 text-xs outline-none"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block text-xxs font-bold">集合場所</label>
+              <input
+                type="text"
+                className="w-full h-5 p-2 border rounded text-gray-700 text-xs outline-none"
+              />
+            </div>
+            <div className="mb-2">
+              <label className="block text-xxs font-bold">説明</label>
+              <textarea className="w-full h-12 p-2 border rounded text-gray-700 text-xxs outline-none"></textarea>
+            </div>
+            <div className="mb-2">
+              <button
+                type="button"
+                className="flex items-center text-blue-500 text-xxs font-bold"
+              >
+                <AddIcon className="icon-extra-small" />
+                メンバーを招待
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <button
+                type="button"
+                className="flex items-center mr-2 p-2 border-none rounded bg-gray-400 text-xxs h-6"
+                onClick={closeModal}
+              >
+                キャンセル
+              </button>
+              <button
+                type="submit"
+                className="flex items-center p-2 border-none rounded bg-blue-500 text-xxs text-white h-6"
+              >
+                作成
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <div className="calendar-container bg-white  shadow rounded-lg overflow-hidden">
+    <div className="calendar-container bg-white  shadow rounded-lg overflow-hidden relative">
       {renderHeader()}
       {renderMenu()}
       {renderDays()}
+      {renderModal()}
     </div>
   );
 };
