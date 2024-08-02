@@ -34,32 +34,63 @@ export default function Login() {
       }
     }
   };
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <p>ログインはこちらから</p>
-        <input
-          className="text-gray-500"
-          type="email"
-          placeholder="メールアドレス"
-          required
-          ref={email}
-        />
-        <input
-          className="text-gray-500"
-          type="password"
-          placeholder="パスワード"
-          required
-          ref={password}
-        />
-        <button type="submit">ログイン</button>
-      </form>
-      <div>
-        <Link href="/register">アカウントをお持ちでない場合はこちら</Link>
-      </div>
 
-      {status === "loading" && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">ログイン</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              メールアドレス
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              type="email"
+              placeholder="メールアドレス"
+              required
+              ref={email}
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              パスワード
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              placeholder="パスワード"
+              required
+              ref={password}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              ログイン
+            </button>
+          </div>
+        </form>
+        <div className="mt-4 text-center">
+          <Link href="/register" className="text-blue-500 hover:text-blue-700">
+            アカウントをお持ちでない場合はこちら
+          </Link>
+        </div>
+        {status === "loading" && (
+          <p className="text-center text-gray-500 mt-4">Loading...</p>
+        )}
+        {error && <p className="text-center text-red-500 mt-4">{error}</p>}
+      </div>
     </div>
   );
 }
