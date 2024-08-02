@@ -1,22 +1,22 @@
 "use client";
 
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../redux/slices/authSlice";
+import { AppDispatch, RootState } from "../../redux/store";
 
 export default function Register() {
   const username = useRef<HTMLInputElement>(null);
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
   const passwordConfirmation = useRef<HTMLInputElement>(null);
-
-  const serverUrl = process.env.NEXT_PUBLIC_API_URL;
-
+  const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const { status, error } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (password.current?.value !== passwordConfirmation.current?.value) {
       passwordConfirmation.current?.setCustomValidity(
         "パスワードが一致しません"
@@ -24,26 +24,15 @@ export default function Register() {
     } else {
       passwordConfirmation.current?.setCustomValidity("");
 
-      try {
-        const user = {
-          username: username.current?.value,
-          email: email.current?.value,
-          password: password.current?.value,
+      if (username.current && email.current && password.current) {
+        const credentials = {
+          username: username.current.value,
+          email: email.current.value,
+          password: password.current.value,
         };
-        const res = await axios.post(`${serverUrl}/register`, user);
-        router.push("/login");
-
-        if (res.status === 201) {
-          console.log("登録完了");
-          alert("登録完了");
-        }
-      } catch (err: any) {
-        if (err.response) {
-          console.log(err.response.data.message);
-          alert("このメールアドレスは既に登録されています");
-        } else {
-          console.error("Error:", err.message);
-          alert("エラーが発生しました。やり直してください。");
+        const resultAction = await dispatch(register(credentials));
+        if (register.fulfilled.match(resultAction)) {
+          router.push("/login");
         }
       }
     }
@@ -82,6 +71,8 @@ export default function Register() {
         />
         <button type="submit">登録</button>
       </form>
+      {status === "loading" && <p>Loading...</p>}
+      {error && <p>{error}</p>}
     </div>
   );
 }

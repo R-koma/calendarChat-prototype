@@ -1,5 +1,8 @@
 "use client";
 
+import React from "react";
+import { useAuth } from "../hooks/useAuth";
+
 import Header from "../components/Header";
 import Days from "../components/Days";
 import Menu from "../components/Menu";
@@ -7,8 +10,15 @@ import Modal from "../components/Modal";
 import useDate from "../hooks/useDate";
 import useMenu from "../hooks/useMenu";
 import useModal from "../hooks/useModal";
+import Login from "../login/page";
 
 const Calendar: React.FC = () => {
+  const { user } = useAuth();
+
+  if (!user) {
+    return <Login />;
+  }
+
   const {
     currentDate,
     setCurrentDate,
