@@ -1,19 +1,17 @@
 "use client";
 
-import axios from "axios";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
-import { RootState } from "../redux/store";
-import { setUser } from "../redux/slices/authSlice";
+import axios from "axios";
+import { RootState } from "../../redux/store";
+import { setUser } from "../../redux/slices/authSlice";
+import { useRouter } from "next/navigation";
 
-export default function Home() {
+export const useAuth = () => {
   const { user, status } = useSelector((state: RootState) => state.auth);
   const router = useRouter();
   const dispatch = useDispatch();
-
-  const serverUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,6 +22,7 @@ export default function Home() {
           return;
         }
 
+        const serverUrl = process.env.NEXT_PUBLIC_API_URL;
         const response = await axios.get(`${serverUrl}/calendar`, {
           withCredentials: true,
           headers: {
@@ -38,14 +37,8 @@ export default function Home() {
 
     if (!user && status !== "loading") {
       fetchData();
-    } else if (user) {
-      router.push("/calendar");
     }
   }, [user, status, router, dispatch]);
 
-  return (
-    <div>
-      <p>Loading...</p>
-    </div>
-  );
-}
+  return { user, status };
+};

@@ -1,39 +1,36 @@
 "use client";
 
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useRef } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch, RootState } from "../../redux/store";
+import { login } from "../../redux/slices/authSlice";
+import Link from "next/link";
 
 export default function Login() {
   const email = useRef<HTMLInputElement>(null);
   const password = useRef<HTMLInputElement>(null);
-
-  const serverUrl = process.env.NEXT_PUBLIC_API_URL;
-
+  const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
+  const { status, error } = useSelector((state: RootState) => state.auth);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      const user = {
-        email: email.current?.value,
-        password: password.current?.value,
+    if (email.current && password.current) {
+      const credentials = {
+        email: email.current.value,
+        password: password.current.value,
       };
-      const res = await axios.post(`${serverUrl}/login`, user);
-      router.push("/calendar");
-
-      if (res.status === 200) {
-        console.log("ログイン完了");
-        alert("ログイン完了");
-      }
-    } catch (err: any) {
-      if (err.response) {
-        console.error("Error:", err.response.data.message);
-        alert("メールアドレスまたはパスワードが間違っています");
-      } else {
-        console.error("Error:", err.message);
-        alert("エラーが発生しました。やり直してください。");
+      try {
+        const resultAction = await dispatch(login(credentials));
+        if (login.fulfilled.match(resultAction)) {
+          router.push("/calendar");
+        } else {
+          throw new Error("Login failed");
+        }
+      } catch (err) {
+        console.error("Failed to login:", err);
+        alert("ログインに失敗しました。");
       }
     }
   };
@@ -57,6 +54,12 @@ export default function Login() {
         />
         <button type="submit">ログイン</button>
       </form>
+      <div>
+        <Link href="/register">アカウントをお持ちでない場合はこちら</Link>
+      </div>
+
+      {status === "loading" && <p>Loading...</p>}
+      {error && <p>{error}</p>}
     </div>
   );
 }
