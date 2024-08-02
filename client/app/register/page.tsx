@@ -37,42 +37,90 @@ export default function Register() {
       }
     }
   };
+
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <p>新規登録</p>
-        <input
-          className="text-gray-500"
-          type="text"
-          placeholder="ユーザー名"
-          required
-          ref={username}
-        />
-        <input
-          className="text-gray-500"
-          type="email"
-          placeholder="メールアドレス"
-          required
-          ref={email}
-        />
-        <input
-          className="text-gray-500"
-          type="password"
-          placeholder="パスワード"
-          required
-          ref={password}
-        />
-        <input
-          className="text-gray-500"
-          type="password"
-          placeholder="確認用パスワード"
-          required
-          ref={passwordConfirmation}
-        />
-        <button type="submit">登録</button>
-      </form>
-      {status === "loading" && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold mb-6 text-center">新規登録</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="username"
+            >
+              ユーザー名
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="username"
+              type="text"
+              placeholder="ユーザー名"
+              required
+              ref={username}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="email"
+            >
+              メールアドレス
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="email"
+              type="email"
+              placeholder="メールアドレス"
+              required
+              ref={email}
+            />
+          </div>
+          <div className="mb-4">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              パスワード
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="password"
+              type="password"
+              placeholder="パスワード"
+              required
+              ref={password}
+            />
+          </div>
+          <div className="mb-6">
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="passwordConfirmation"
+            >
+              確認用パスワード
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="passwordConfirmation"
+              type="password"
+              placeholder="確認用パスワード"
+              required
+              ref={passwordConfirmation}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              type="submit"
+            >
+              登録
+            </button>
+          </div>
+        </form>
+        {status === "loading" && (
+          <p className="text-center text-gray-500 mt-4">Loading...</p>
+        )}
+        {error && <p className="text-center text-red-500 mt-4">{error}</p>}
+      </div>
     </div>
   );
 }
